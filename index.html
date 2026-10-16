@@ -11,7 +11,7 @@
 <style>
 :root{
   /* Layout: cartridge shelf on the left, a dark play table lit by the current game's splash art, rules strip beneath the table */
-  --bg:#14111b; --panel:#1d1827; --panel-2:#2a2337; --line:#30283f; --text:#eee9f5; --muted:#a69db8; --coral:#f26b5b;
+  --bg:#14111b; --panel:#1d1827; --panel-2:#2a2337; --line:#30283f; --text:#eee9f5; --muted:#a69db8; --blinks:#FA4616;
   --f-ui:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
   --f-disp:"Bricolage Grotesque","Figtree",system-ui,sans-serif;
   --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
@@ -32,7 +32,7 @@ h1{display:flex;align-items:center;gap:9px;font-family:var(--f-disp);font-weight
 .seg button:hover{background:var(--panel-2)}
 .btn{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 13px}
 .btn:hover{border-color:#4a3f5e;background:var(--panel-2)}
-button:focus-visible{outline:2px solid var(--coral);outline-offset:2px}
+button:focus-visible{outline:2px solid var(--blinks);outline-offset:2px}
 
 .shelf{min-height:0;overflow-y:auto;padding-right:6px;scrollbar-width:thin;scrollbar-color:#3a3150 transparent}
 .shelf h2{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:2px 0 8px;font-weight:600}
@@ -40,7 +40,7 @@ button:focus-visible{outline:2px solid var(--coral);outline-offset:2px}
 .cart{position:relative;display:block;width:100%;aspect-ratio:1;max-width:100%;padding:0;border:0;background:none;cursor:pointer;container-type:inline-size;transition:transform .15s ease,filter .15s ease;filter:drop-shadow(0 6px 8px rgba(0,0,0,.45))}
 .cart:hover{transform:translateY(-3px)}
 .cart:focus-visible{outline:none;filter:drop-shadow(0 0 2px #fff) drop-shadow(0 6px 8px rgba(0,0,0,.45))}
-.cart[aria-pressed="true"]{filter:drop-shadow(0 0 2px var(--coral)) drop-shadow(0 0 9px rgba(242,107,91,.85))}
+.cart[aria-pressed="true"]{filter:drop-shadow(0 0 2px var(--blinks)) drop-shadow(0 0 9px rgba(250,70,22,.85))}
 /* window of the cartridge frame, measured from the 1024px source: x 144–881, y 238–645 */
 .art{position:absolute;left:14.06%;top:23.24%;width:71.97%;height:39.75%;-webkit-mask:url(assets/cartridge-window-mask.png) center/100% 100% no-repeat;mask:url(assets/cartridge-window-mask.png) center/100% 100% no-repeat}
 .art canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
@@ -54,7 +54,7 @@ button:focus-visible{outline:2px solid var(--coral);outline-offset:2px}
 #splash{filter:saturate(1.08) blur(1.5px);transform:scale(1.03)}
 .shade{background:radial-gradient(ellipse at 50% 56%,rgba(13,10,20,.28) 0%,rgba(13,10,20,.56) 55%,rgba(13,10,20,.86) 100%)}
 #board{touch-action:none;outline:none}
-#board:focus-visible{box-shadow:inset 0 0 0 2px var(--coral)}
+#board:focus-visible{box-shadow:inset 0 0 0 2px var(--blinks)}
 .np{position:absolute;left:18px;top:14px;pointer-events:none;max-width:min(62%,440px)}
 .eyebrow{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.72);font-weight:700}
 .np-title{font-size:clamp(28px,3.6vw,46px);line-height:1.02;margin-top:6px;color:var(--ink)}
@@ -62,12 +62,12 @@ button:focus-visible{outline:2px solid var(--coral);outline-offset:2px}
 .status{position:absolute;left:16px;bottom:12px;right:96px;font:500 11.5px/1.5 var(--f-mono);color:rgba(255,255,255,.66);pointer-events:none}
 
 .rules{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(230px,.9fr);gap:14px 26px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 18px}
-.rules h3{margin:0 0 6px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--coral);font-weight:700}
+.rules h3{margin:0 0 6px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--blinks);font-weight:700}
 .rules p{margin:0;line-height:1.5;color:#dcd6e7;font-size:13.5px;max-width:62ch}
 .rules ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
 .rules li{display:flex;gap:10px;align-items:center;font-size:13px;color:#dcd6e7}
 .chip{display:inline-flex;align-items:center;gap:7px;flex:none;min-width:116px;box-sizing:border-box;padding:3px 9px;border-radius:7px;background:var(--panel-2);border:1px solid #3a3150;font:600 11.5px var(--f-mono);color:var(--text)}
-.chip .gl{color:var(--coral);letter-spacing:-.05em}
+.chip .gl{color:var(--blinks);letter-spacing:-.05em}
 
 @media (max-width:900px){
   .brand p{border-left:0;padding-left:0;flex-basis:100%}
@@ -773,7 +773,7 @@ function drawTile(c, t) {
   c.strokeStyle = "rgba(30,30,45,.32)"; c.lineWidth = 1; c.beginPath(); for (const v of V) { c.moveTo(x, y); c.lineTo(v[0], v[1]); } c.stroke();
   c.beginPath(); V.forEach((v, i) => i ? c.lineTo(v[0], v[1]) : c.moveTo(v[0], v[1])); c.closePath(); c.strokeStyle = "rgba(60,60,75,.5)"; c.lineWidth = 1.5; c.stroke();
   if (t.btn.down) { c.fillStyle = "rgba(0,0,0,.14)"; c.fill(); }
-  if (t === lastTouched && document.activeElement === board) { c.fillStyle = "#f26b5b"; c.beginPath(); c.arc(x, y + R * .89, 2.6, 0, TAU); c.fill(); }
+  if (t === lastTouched && document.activeElement === board) { c.fillStyle = "#FA4616"; c.beginPath(); c.arc(x, y + R * .89, 2.6, 0, TAU); c.fill(); }
 }
 function drawBoard(now) {
   const c = bctx; c.setTransform(DPR, 0, 0, DPR, 0, 0); c.clearRect(0, 0, W, H);
@@ -781,7 +781,7 @@ function drawBoard(now) {
   const dragging = tiles.find(t => t.drag);
   if (dragging) {
     const [tx, ty] = trashPos(), hot = inTrash(dragging.drag.x, dragging.drag.y);
-    c.save(); c.setLineDash([5, 5]); c.lineWidth = 2; c.strokeStyle = hot ? "#f26b5b" : "rgba(255,255,255,.45)"; c.fillStyle = hot ? "rgba(242,107,91,.25)" : "rgba(10,8,16,.5)";
+    c.save(); c.setLineDash([5, 5]); c.lineWidth = 2; c.strokeStyle = hot ? "#FA4616" : "rgba(255,255,255,.45)"; c.fillStyle = hot ? "rgba(250,70,22,.25)" : "rgba(10,8,16,.5)";
     c.beginPath(); c.arc(tx, ty, 34, 0, TAU); c.fill(); c.stroke(); c.restore();
     c.strokeStyle = hot ? "#fff" : "rgba(255,255,255,.75)"; c.lineWidth = 2; c.beginPath(); c.moveTo(tx - 10, ty - 8); c.lineTo(tx + 10, ty - 8); c.moveTo(tx - 4, ty - 12); c.lineTo(tx + 4, ty - 12); c.stroke();
     rrect(c, tx - 8, ty - 6, 16, 17, 2); c.stroke();
@@ -799,7 +799,7 @@ function drawBoard(now) {
   c.font = '600 12px "JetBrains Mono", ui-monospace, monospace'; c.textAlign = "center"; c.textBaseline = "middle";
   for (let i = toasts.length - 1; i >= 0; i--) { const o = toasts[i], n = per.get(o.t) || 0; if (n >= 3) continue; per.set(o.t, n + 1);
     const age = now - o.born, [x, y] = tilePos(o.t), yy = y - S * 1.15 - n * 22 - age * .01, al = age < 1150 ? 1 : 1 - (age - 1150) / 350, w = c.measureText(o.text).width + 16;
-    c.globalAlpha = Math.max(0, al); c.fillStyle = o.kind === "s" ? "rgba(242,107,91,.96)" : "rgba(16,13,24,.85)"; rrect(c, x - w / 2, yy - 10, w, 20, 10); c.fill();
+    c.globalAlpha = Math.max(0, al); c.fillStyle = o.kind === "s" ? "rgba(250,70,22,.96)" : "rgba(16,13,24,.85)"; rrect(c, x - w / 2, yy - 10, w, 20, 10); c.fill();
     c.fillStyle = o.kind === "s" ? "#fff" : "#d8d2e6"; c.fillText(o.text, x, yy + .5); c.globalAlpha = 1; }
 }
 
