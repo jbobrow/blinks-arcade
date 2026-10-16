@@ -1,5 +1,7 @@
 # Blinks Arcade
 
+**Play it at [blinksarcade.jonbobrow.com](https://blinksarcade.jonbobrow.com)**
+
 Ten one-button games for [Blinks](https://move38.com), playable in the browser. Every game works on a single Blink. Drag Blinks together and the same game switches to connected play.
 
 ## How to play
@@ -36,7 +38,7 @@ python3 -m http.server 8000
 
 ## Publishing
 
-GitHub Pages: **Settings → Pages → Deploy from a branch → `main` / root**. The `.nojekyll` file makes Pages serve the files as-is.
+GitHub Pages serves `main` from the repo root, with the custom domain set in `CNAME`. The `.nojekyll` file makes Pages serve the files as-is.
 
 ## Project layout
 
