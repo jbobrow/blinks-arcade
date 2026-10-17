@@ -562,17 +562,21 @@ const GAMES = [
 
 { id:"safe", name:"Safecracker", font:"'Bungee',sans-serif", ink:"#ffd25e", stroke:"#0b1320", ts:.6, art:ART.safe, hold:true,
   pitch:"Hold to turn the dial. Release on the right color.",
-  solo:"Hold the button and the lit pin cycles through colors. It flickers faster as you get close to the hidden color. Release to set the pin. A miss jams the pin red and you try again. Set all six pins to open the safe.",
+  solo:"Hold the button and the lit pin turns through the colors, glowing brighter as it nears the hidden one. When the two segments beside it light up white, the tumbler has caught: release to set the pin. A miss jams the pin red and you try again. Each pin is a little faster and tighter than the last. Set all six to open the safe.",
   link:"Every touching tile gets the same combination, so it becomes a race to open first. The pins your neighbors have already set show their colors, so peeking is part of the game.",
-  controls:[["hold","Turn the dial · release to set"],["click","New safe once open"]],
+  controls:[["hold","Turn the dial · release on white"],["click","New safe once open"]],
   initCluster(C,now){ C.s={combo:Array.from({length:6},()=>ri(360)),st:new Map(C.tiles.map(t=>[t.id,{lock:Array(6).fill(false),cur:0,hold:false,h0:0,hs:0,jam:0,open:0}])),winner:null,wt:0}; },
-  hue(st,now){ return (st.h0+(now-st.hs)*.11)%360; },
+  /* the dial speeds up and the window tightens with each pin: 60°/s & ±26° on pin 1, 85°/s & ±18° on pin 6 */
+  speed(st){ return (60+5*st.cur)/1000; },
+  win(st){ return 26-1.6*st.cur; },
+  hue(st,now){ return (st.h0+Math.max(0,now-st.hs)*this.speed(st))%360; },
   event(C,t,ev,now){ const s=C.s, st=s.st.get(t.id); if(!st) return;
     if(s.winner||st.open){ if(ev.type==="click"&&now-(st.open||s.wt)>900) this.initCluster(C,now); return; }
-    if(ev.type==="down"){ st.hold=true; st.hs=now; st.h0=Math.random()*360; }
+    if(ev.type==="down"){ st.hold=true; st.hs=now; st.h0=(s.combo[st.cur]+120+Math.random()*120)%360; }
     else if(ev.type==="up"){ if(!st.hold) return; st.hold=false; if(ev.cancel) return;
-      const d=hueDist(this.hue(st,now),s.combo[st.cur]);
-      if(d<=20){ st.lock[st.cur]=true; st.cur++; if(st.cur===6){ st.open=now; if(C.tiles.length>1){ s.winner=t; s.wt=now; say(t,"cracked it first"); } else say(t,"cracked!"); } else say(t,`pin ${st.cur} of 6`); }
+      /* 90 ms grace so a release just after the cue ends still counts */
+      const w=this.win(st), d=Math.min(hueDist(this.hue(st,now),s.combo[st.cur]),hueDist(this.hue(st,now-90),s.combo[st.cur]));
+      if(d<=w){ st.lock[st.cur]=true; st.cur++; if(st.cur===6){ st.open=now; if(C.tiles.length>1){ s.winner=t; s.wt=now; say(t,"cracked it first"); } else say(t,"cracked!"); } else say(t,`pin ${st.cur} of 6`); }
       else { st.jam=now+450; say(t,"jammed"); } } },
   draw(C,t,now){ const s=C.s, st=s.st.get(t.id); if(!st) return six([0,0,0]);
     if(s.winner&&s.winner!==t) return six(scl([255,20,20],pulse(now,900,.05,.25)));
@@ -581,7 +585,9 @@ const GAMES = [
     for(let f=0;f<6;f++) if(st.lock[f]) L[f]=hsv(s.combo[f],1,.85);
     const f=st.cur;
     if(now<st.jam) L[f]=[255,0,0];
-    else if(st.hold){ const h=this.hue(st,now), d=hueDist(h,s.combo[f]), c=1-d/180, per=480-420*c*c, on=(now%per)<per*.5; L[f]=hsv(h,1,on?1:.15); }
+    else if(st.hold){ const h=this.hue(st,now), w=this.win(st), d=hueDist(h,s.combo[f]), near=clamp(1-(d-w)/100,0,1);
+      L[f]=hsv(h,1,.1+.9*near*near);
+      if(d<=w){ L[f]=hsv(h,.3,1); L[(f+1)%6]=[255,255,255]; L[(f+5)%6]=[255,255,255]; } }
     else L[f]=scl([255,255,255],pulse(now,1200,.06,.3));
     return L; } },
 
