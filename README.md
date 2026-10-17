@@ -4,6 +4,10 @@
 
 Ten one-button games for [Blinks](https://move38.com), playable in the browser. Every game works on a single Blink. Drag Blinks together and the same game switches to connected play.
 
+## Play on real Blinks
+
+The [`blinks/`](blinks/) folder has an Arduino sketch for each game, ready to load onto Blinks with the [Blinks SDK](https://github.com/Move38/Blinks-SDK). See [`blinks/README.md`](blinks/README.md) for loading steps, controls and how the hardware versions differ.
+
 ## How to play
 
 - **Press the center** of a Blink to use its button. Click, double-click, triple-click, long press (700 ms) and hold-and-release all work.
@@ -46,6 +50,8 @@ GitHub Pages serves `main` from the repo root, with the custom domain set in `CN
 index.html                       page, simulator and all ten games
 assets/cartridge-frame.png       cartridge frame (window is transparent)
 assets/cartridge-window-mask.png alpha mask for the cartridge window
+blinks/<Game>/<Game>.ino         Arduino sketch for each game, for real Blinks
+tools/build-blinks.sh            command-line build + size check for the sketches
 ```
 
 ## Adding a game
